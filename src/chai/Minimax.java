@@ -43,6 +43,13 @@ public class Minimax implements ChessAI{
 		MoveVal bestMove = new MoveVal();
 		for(int i = maxDepth - 1; i >= 0; i--)
 			bestMove = maxMove(position, i);
+		String[] player = {"White", "Black"};
+		if(bestMove.val == Integer.MAX_VALUE)
+			System.out.println(player[curPlayer] + " Wins!");
+		else if(bestMove.val == Integer.MIN_VALUE)
+			System.out.println(player[(curPlayer + 1) % 2] + " Wins!");
+		else if(bestMove.val == 0)
+			System.out.println("Draw!");
 		return bestMove.move;
 	}
 	
