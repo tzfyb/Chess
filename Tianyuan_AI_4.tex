@@ -45,11 +45,11 @@ numbers=left
 \maketitle
 
 \section{Introduction}
-The adversarial search in Zero-Sum games is an important area of AI, which can also be applied to many real world applications also. The Chess game is the representative among these games. In this assignment I build a Chess AI and tried to optimize it in terms of time and space. In this assignment, I implemented the Minimax Method, Alpha-Beta Pruning, Transposition table, Profile Analysis and Move reordering.
+The adversarial search in Zero-Sum games is an important area of AI, which can also be applied to many real-world applications also. The Chess game is the representative among these games. In this assignment, I built a Chess AI and tried to optimize it in terms of time and space. In this assignment, I implemented the Minimax Method, Alpha-Beta Pruning, Transposition table, Profile Analysis and Move reordering.
 
 \section{Minimax Search}
 \subsection{Basic Idea}
-The basic idea of Minimax Search is that whenever we need to make a decision in a game, we are not only evaluate according to the current state of the game, but also the opponent's play - the reaction of adversary in his/her turn. As it is obviously a tree shape prediction model, we can use computer to process the tree and try to find the best movement for the current player according to the prediction for the next few moves. In Minimax Search algorithm, the current play always want its score to be maximum, while its opponent always want its score to be minimum. Then for each level of the prediction tree we have a evaluation for each node corresponding to the current player, so basically we just enumerate all the possible moves of the whole game. However as the limitation of the computation power of the computer, we need to limit the max-depth of the search tree and pick the best move found so far.
+The basic idea of Minimax Search is that whenever we need to make a decision in a game, we are not only evaluating according to the current state of the game, but also the opponent's play - the reaction of the adversary in his/her turn. As it is obviously a tree shape prediction model, we can use a computer to process the tree and try to find the best movement for the current player according to the prediction for the next few moves. In Minimax Search algorithm, the current play always wants its score to be maximum, while its opponent always wants its score to be minimum. Then for each level of the prediction tree we have an evaluation for each node corresponding to the current player, so basically we just enumerate all the possible moves of the whole game. However, as the limitation of the computation power of the computer, we need to limit the max-depth of the search tree and pick the best move found so far.
 
 \subsection{Code Implementation}
 \subsubsection{Class : MoveVal}
@@ -70,7 +70,7 @@ public class MoveVal{
 }
 \end{lstlisting}
 \subsubsection{minimaxIDS}
-This method is theiterative deepening returns a $short$ type result which represents the next best move for the current player. This method will call mthod $maxMove$.
+This method is iterative deepening returns a $short$ type result which represents the next best move for the current player. This method will call method $maxMove$.
 \begin{lstlisting}
 private short miniMaxIDS(Position position, int maxDepth) 
 			throws IllegalMoveException{
@@ -82,7 +82,7 @@ private short miniMaxIDS(Position position, int maxDepth)
 \end{lstlisting}
 
 \subsubsection{maxMove}
-This method is the $Max$ part of the Maxmini Seerch. For a given position of the current player, this method try each possible move for the next player and call $minMove$ method to get the evaluation of the oponent, then according to the evaluation of the opponent to choose the best move for the current player.
+This method is the $Max$ part of the Minimax Search. For a given position of the current player, this method try each possible move for the next player and call $minMove$ method to get the evaluation of the opponent, then according to the evaluation of the opponent to choose the best move for the current player.
 \begin{lstlisting}
 private MoveVal maxMove(Position position, int depth) 
 		throws IllegalMoveException{
@@ -106,7 +106,7 @@ private MoveVal maxMove(Position position, int depth)
 \end{lstlisting}
 
 \subsubsection{minMove}
-This method is the $Min$ part of the Maxmini Search. It will get the position from the method $maxMove$ and call $maxMove$ for each possible next move. Then it will chose the minimum evaluation among all the evaluation it gets.
+This method is the $Min$ part of the Minimax Search. It will get the position from the method $maxMove$ and call $maxMove$ for each possible next move. Then it will choose the minimum evaluation among all the evaluation it gets.
 \begin{lstlisting}
 private MoveVal minMove(Position position, int depth) 
 		throws IllegalMoveException{
@@ -152,7 +152,7 @@ private int utility(Position position){
 Here I would like to show two experiments I played with the Maximini Search AI. I set up two games, both of them are Minimax AI v.s. Random AI, but one of them is with max-depth = 1 and another one is with max-depth = 3. The difference between the decision that the AI made is obvious.
 \clearpage
 \subsubsection{max-depth = 1}
-This AI plays like a Chess newbie - it always want to capture the oponent whenever possible. The result is that it can always win the random AI but it will spend a lot of steps. The result shown as follow, we can see that the random AI (Black) has almost nothing left and it cost Minimax AI (White) 19 turns to win.
+This AI plays like a Chess newbie - it always want to capture the opponent whenever possible. The result is that it can always win the random AI but it will spend a lot of steps. The result shown as follow, we can see that the random AI (Black) has almost nothing left and it cost Minimax AI (White) 19 turns to win.
 
 \begin{lstlisting}
 White Wins!
@@ -167,7 +167,7 @@ N4k2/5Q2/2P1B3/7p/3P1p2/P4P2/P1P3PP/R3K1NR b KQ - 1 19
 
 \clearpage
 \subsubsection{max-depth = 3}
-This AI plays smarter - it may not capture as many as the AI with depth = 1, but it can always win quick. We can see that White only capture one Pawn but wins in 8 turns.
+This AI plays smarter - it may not capture as many as the AI with depth = 1, but it can always win quickly. We can see that White only capture one Pawn but wins in 8 turns.
 \begin{lstlisting}
 White Wins!
 making move -25251
@@ -182,7 +182,7 @@ rnbqk2r/2pp1Q1p/pp1bp1p1/3nP1N1/8/2N5/PPPP1PPP/R1B1KB1R b KQkq - 0 8
 
 \section{Alpha-Beta Pruning}
 \subsection{Basic Idea}
-The basic idea of Alpha-Beta Pruning is to prevent traversal the branch of the tree as much as possible. For the AB Pruning, it will records the current minimum evaluation and maximum evaluation for the node and if the next step is obviously worse than the current step, then we can prevent traversal that branch.
+The basic idea of Alpha-Beta Pruning is to prevent traversal the branch of the tree as much as possible. For the AB Pruning, it will record the current minimum evaluation and maximum evaluation for the node, and if the next step is obviously worse than the current step, then we can prevent traversal that branch.
 
 \subsection{Code Implementation}
 Basically the implementation of AB Pruning is a lot like the Minimax Search except that the Alpha-Beta constraints are added.
@@ -244,9 +244,9 @@ The difference is that lines 16-20 are added to jump out of the loop earlier if 
 \end{lstlisting}
 
 \subsection{Result}
-For this part I majorly want to show the correctness of my AB Pruning implementation and the better performance of AB Pruning over Minimax Search.
+For this part, I majorly want to show the correctness of my AB Pruning implementation and the better performance of AB Pruning over Minimax Search.
 \subsubsection{Correctness}
-To check the correctness of the AB Pruning implementation is that given the same situation, AB Pruning should perform the same moves as Minimax Search. So my method is to first let a White(Minimax with depth = 3) vs Black(ABP with depth = 3), then let a White(ABP with depth = 3) vs Black(Minimax with depth = 3). If my AB Pruning was right, then the result of these two playes should be excatly the same. The results shows that though I switch two AI's position, the winner is always the White side with 29 turns and with the same ending position. Here is the result:
+To check the correctness of the AB Pruning implementation is that given the same situation, AB Pruning should perform the same moves as Minimax Search. So my method is to first let a White(Minimax with depth = 3) vs Black(ABP with depth = 3), then let a White(ABP with depth = 3) vs Black(Minimax with depth = 3). If my AB Pruning was right, then the result of these two players should be exactly the same. The results show that though I switch two AI's position, the winner is always the White side with 29 turns and with the same ending position. Here is the result:
 
 \clearpage
 \textbf{White(Minimax) vs Black(ABP)}
@@ -277,6 +277,152 @@ White Wins!
 \end{figure}
 
 \subsubsection{Performance}
-To show that the performance of AB Pruning is better than Minimax Search, I also set up two plays - one is Minimax v.s. Minimax and another one is Minimax v.s. ABP. All the AI have the sampe max-depth = 3. By showing the total time each play spend, we can see that AB Pruning is actually beat Minimax in terms of performance. Here is the result:
+To show that the performance of AB Pruning is better than Minimax Search, I also set up two experiment sets - one is Minimax v.s. Minimax and the other one is Minimax v.s. ABP. All the AI have the same max-depth = 3. By showing the total time each AI spend, we can see that AB Pruning beats Minimax regarding performance. Here is the result:
+
+\textbf{Minimax vs Minimax}
+
+As there are two AIs and both of them are using Minimax Search, we can see that the time spent by them is similar - one is 4080 ms and the other one is 3674 ms.
+\begin{lstlisting}
+White Wins!
+Time Spent: 4080
+making move 7030
+1Bbkq2r/1p3p1p/3p1Q2/2pP4/5P2/2P5/P5PP/2KnR3 b - - 1 29
+White Wins!
+Time Spent: 3674
+\end{lstlisting}
+
+\textbf{Minimax vs ABP}
+This shows that ABP improves the performance significantly comparing to Minimax even with max-depth = 3. The Minimax AI spent almost the same amount of time as the previous one, 4051 ms, while the ABP AI just spent 888 ms - 3 times quicker than Minimax Search!
+
+\begin{lstlisting}
+White Wins!
+Time Spent: 4051
+making move 7030
+1Bbkq2r/1p3p1p/3p1Q2/2pP4/5P2/2P5/P5PP/2KnR3 b - - 1 29
+White Wins!
+Time Spent: 888
+\end{lstlisting}
+
+\clearpage
+\section{Transposition Table}
+\subsection{Basic Idea}
+The basic idea is to have a HashTable store the position we have visited. Need to mention that we also need to consider the depth of the evaluation. We only use the HashTable's move when the HashTable's move are found in a deeper branch than the current one. Otherwise we need to do the search and update the HashMap. In this way, we ensure the accuracy of the search.
+
+\subsection{Implementation}
+The implementation is similar to the AB Pruning, I just add a HashMap and each time before I call $maxMove$ or $minMove$, I first check the HashMap to see if the result already exists. Here is the code.
+
+\begin{lstlisting}
+	private MoveVal maxMove(Position position, int depth, int alpha, 
+		int beta, int curMaxDepth) throws IllegalMoveException {
+		MoveVal bestMove = new MoveVal((short) 0, Integer.MIN_VALUE);
+		if (depth == curMaxDepth || position.isTerminal()) {
+			bestMove.setMove(position.getLastShortMove());
+			bestMove.setVal(utility(position));
+			// System.out.println(Integer.toString(bestMove.val));
+		} else {
+			for (short move : position.getAllMoves()) {
+				position.doMove(move);
+				if (transTable.containsKey(position.getHashCode())
+						&& (transTable.get(position.getHashCode())).depth 
+									>= curMaxDepth) {
+					TransValue tv = transTable.get(position.getHashCode());
+					bestMove.setMove(move);
+					bestMove.setVal(tv.val);
+				} else {
+					int val = (minMove(position, depth + 1, alpha, 
+									beta, curMaxDepth)).val;
+					if (bestMove.val < val) {
+						bestMove.setVal(val);
+						bestMove.setMove(move);
+					}
+					transTable.put(position.getHashCode(), 
+						new TransValue(val, curMaxDepth, move));
+				}
+				position.undoMove();
+				alpha = bestMove.val;
+				if (alpha >= beta) {
+					bestMove.setVal(beta);
+					break;
+				}
+			}
+		}
+		return bestMove;
+	}
+
+	private MoveVal minMove(Position position, int depth, int alpha, 
+			int beta, int curMaxDepth) throws IllegalMoveException {
+		MoveVal bestMove = new MoveVal((short) 0, Integer.MAX_VALUE);
+		if (depth == curMaxDepth || position.isTerminal()) {
+			bestMove.setMove(position.getLastShortMove());
+			bestMove.setVal(utility(position));
+		} else {
+			for (short move : position.getAllMoves()) {
+				position.doMove(move);
+				if (transTable.containsKey(position.getHashCode())
+						&& (transTable.get(position.getHashCode())).depth 
+								>= curMaxDepth) {
+					TransValue tv = transTable.get(position.getHashCode());
+					bestMove.setMove(move);
+					bestMove.setVal(tv.val);
+				} else {
+					int val = (maxMove(position, depth + 1, alpha, 
+						beta, curMaxDepth)).val;
+					if (bestMove.val > val) {
+						bestMove.setMove(move);
+						bestMove.setVal(val);
+					}
+					transTable.put(position.getHashCode(), 
+						new TransValue(val, curMaxDepth, move));
+				}
+				position.undoMove();
+				beta = bestMove.val;
+				if (beta <= alpha) {
+					bestMove.setVal(alpha);
+					break;
+				}
+			}
+		}
+		return bestMove;
+	}
+\end{lstlisting}
+
+\section{Profiling(Bonus)}
+I implemented profiling codes in class $ABP$, $Minimax$  and $ABP\_Trans$ to record the runtime for each move evaluation. After you run with them, the corresponding $txt$ log file will be created. It turns out that for each step the time spent is as follows, from left to right is the time spent on each step for ABP with Transposition Table, ABP, and Minimax. It is clear that Minimax spent most of the time in each step. But interesting things happened when to compare ABP with Transposition table and pure ABP. Sometimes ABP with Transposition table spends more time than ABP but sometimes it saves time. I think it is because insert a new value into the table would cost time, while if a result is already in the table, then ABP with Transposition table can save a lot of time. I think ABP with Transposition table would perform better if max-depth is larger.
+ 
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth,height=\textheight,keepaspectratio]{Profiling}
+\caption{Profiling, left to right, ABP\_Trans, ABP and Minimax}
+\end{figure}
+
+\section{Move Reordering(Bonus)}
+The basic idea for the move reordering is that for maximum, it is more likely trigger the cut-off condition if sort the evaluation from a lower level in decreasing order. Similar to minimum step, it is more likely to trigger the cut-off condition if we sort the evaluation from the lower lever in increasing order. The way is simple - just to sort the all next move's evaluation as needed. Need to mention that we just sort the evaluation that has been found before, which means that the evaluation that is in the Transposition Table. If it does not exist, then we assign the evaluation worst possible value.
+\begin{lstlisting}
+private ArrayList<MoveVal> sortMoves(Position position, boolean turn) 
+			throws IllegalMoveException{
+		ArrayList<MoveVal> res = new ArrayList<MoveVal>();
+		MoveVal curMove = null;
+		for(short move : position.getAllMoves()){
+			position.doMove(move);
+			if(transTable.containsKey(position.getHashCode()))
+				curMove = new MoveVal(move, 
+					transTable.get(position.getHashCode()).val);
+			else
+				curMove = new MoveVal(move, turn ? Integer.MIN_VALUE 
+											: Integer.MAX_VALUE);
+			position.undoMove();
+			res.add(curMove);
+		}
+		
+		Collections.sort(res, new Comparator<MoveVal>(){
+			@Override
+			public int compare(MoveVal m1, MoveVal m2){
+				return (int) (Math.signum(m1.val - m2.val));
+			}
+		});
+		
+		return res;
+	}
+\end{lstlisting}
 
 \end{document}

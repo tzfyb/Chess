@@ -1,18 +1,25 @@
 package chai;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import chesspresso.move.IllegalMoveException;
 import chesspresso.position.Position;
 
 public class Minimax implements ChessAI{
 	private int max_depth;
 	private int curPlayer;
+	long timeSpend;
 	
 	public Minimax(){
 		max_depth = 3;
+		timeSpend = 0;
 	}
 	
 	public Minimax(int md){
 		max_depth = md;
+		timeSpend = 0;
 	}
 	
 	public class MoveVal{
@@ -33,9 +40,22 @@ public class Minimax implements ChessAI{
 	public short getMove(Position position) throws IllegalMoveException{
 		// TODO Auto-generated method stub
 		curPlayer = position.getToPlay();
-		//System.out.println("Minimax, Player" + " " + Integer.toString(curPlayer) + " is thinking...");
+		long startTime = System.currentTimeMillis();
 		short res = miniMaxIDS(position, max_depth);
-		//System.out.println("TEST: " + Integer.toString(curPlayer) + ":" + Short.toString(res.move));
+		
+		long elapsedTime = System.currentTimeMillis() - startTime;
+		timeSpend += elapsedTime;
+		try {
+            FileOutputStream fos = new FileOutputStream("Minimax_Log.txt", true);
+            fos.write((Long.toString(elapsedTime) + "\n").getBytes());
+            fos.write(System.getProperty("line.separator").getBytes());
+            fos.close();
+        } catch (FileNotFoundException fnfe) {
+            System.out.println("FileNotFoundException : " + fnfe);
+        } catch (IOException ioe) {
+            System.out.println("IOException : " + ioe);
+        }
+		System.out.println("Minimax time spend " + Long.toString(elapsedTime) + "ms");
 		return res;
 	}
 	
@@ -44,12 +64,18 @@ public class Minimax implements ChessAI{
 		for(int i = maxDepth - 1; i >= 0; i--)
 			bestMove = maxMove(position, i);
 		String[] player = {"White", "Black"};
-		if(bestMove.val == Integer.MAX_VALUE)
+		if(bestMove.val == Integer.MAX_VALUE){
 			System.out.println(player[curPlayer] + " Wins!");
-		else if(bestMove.val == Integer.MIN_VALUE)
+			System.out.println("Time Spent: " + Long.toString(timeSpend));
+		}
+		else if(bestMove.val == Integer.MIN_VALUE){
 			System.out.println(player[(curPlayer + 1) % 2] + " Wins!");
-		else if(bestMove.val == 0)
+			System.out.println("Time Spent: " + Long.toString(timeSpend));
+		}
+		else if(bestMove.val == 0){
 			System.out.println("Draw!");
+			System.out.println("Time Spent: " + Long.toString(timeSpend));
+		}
 		return bestMove.move;
 	}
 	

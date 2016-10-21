@@ -1,5 +1,8 @@
 package chai;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 import chesspresso.move.IllegalMoveException;
@@ -9,14 +12,17 @@ public class ABP implements ChessAI {
 	private int max_depth;
 	private int curPlayer;
 	protected HashMap<Long, TransValue> transTable = new HashMap<>();
+	long timeSpend;
 	
 
 	public ABP() {
 		max_depth = 3;
+		timeSpend = 0;
 	}
 
 	public ABP(int md) {
 		max_depth = md;
+		timeSpend = 0;
 	}
 
 	public class MoveVal {
@@ -58,7 +64,21 @@ public class ABP implements ChessAI {
 	public short getMove(Position position) throws IllegalMoveException {
 		// TODO Auto-generated method stub
 		curPlayer = position.getToPlay();
+		long beginTime = System.currentTimeMillis();
 		short res = miniMaxIDS(position, max_depth);
+		long elapsedTime = System.currentTimeMillis() - beginTime;
+		timeSpend += elapsedTime;
+		try {
+            FileOutputStream fos = new FileOutputStream("ABP_Log.txt", true);
+            fos.write((Long.toString(elapsedTime) + "\n").getBytes());
+            fos.write(System.getProperty("line.separator").getBytes());
+            fos.close();
+        } catch (FileNotFoundException fnfe) {
+            System.out.println("FileNotFoundException : " + fnfe);
+        } catch (IOException ioe) {
+            System.out.println("IOException : " + ioe);
+        }
+		System.out.println("ABP  time spend " + Long.toString(elapsedTime) + "ms");
 		return res;
 	}
 	
@@ -66,6 +86,21 @@ public class ABP implements ChessAI {
 		MoveVal bestMove = new MoveVal();
 		for(int i = maxDepth - 1; i >= 0; i--)
 			bestMove = maxMove(position, i, Integer.MIN_VALUE, Integer.MAX_VALUE);
+		
+		String[] player = {"White", "Black"};
+		if(bestMove.val == Integer.MAX_VALUE){
+			System.out.println(player[curPlayer] + " Wins!");
+			System.out.println("Time Spent: " + Long.toString(timeSpend));
+		}
+		else if(bestMove.val == Integer.MIN_VALUE){
+			System.out.println(player[(curPlayer + 1) % 2] + " Wins!");
+			System.out.println("Time Spent: " + Long.toString(timeSpend));
+		}
+		else if(bestMove.val == 0){
+			System.out.println("Draw!");
+			System.out.println("Time Spent: " + Long.toString(timeSpend));
+		}
+		
 		return bestMove.move;
 	}
 

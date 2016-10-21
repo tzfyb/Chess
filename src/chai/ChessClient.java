@@ -17,8 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.concurrent.locks.Lock;
-
 import chesspresso.Chess;
 import chesspresso.position.Position;
 
@@ -37,7 +35,7 @@ public class ChessClient extends Application {
 
 	MoveMaker[] moveMaker;
 
-	// Checker
+	// Checker0
 	int turn = 0;
 
 	public static void main(String[] args) {
@@ -78,18 +76,15 @@ public class ChessClient extends Application {
 		// from a server, depending on which type is used.
 		moveMaker = new MoveMaker[2];
 		
-		//moveMaker[Chess.WHITE] = new AIMoveMaker(new Minimax(3));
+		moveMaker[Chess.WHITE] = new AIMoveMaker(new Minimax(3));
 		//moveMaker[Chess.WHITE] = new AIMoveMaker(new ABP_Trans(4));
 		//moveMaker[Chess.WHITE] = new TextFieldMoveMaker();
 		// moveMaker[Chess.WHITE] = new AIMoveMaker(new RandomAI());
-		moveMaker[Chess.WHITE] = new AIMoveMaker(new ABP(3));
+		//moveMaker[Chess.WHITE] = new AIMoveMaker(new ABP(3));
 		//moveMaker[Chess.BLACK] = new AIMoveMaker(new RandomAI());
 		// moveMaker[Chess.BLACK] = new TextFieldMoveMaker();
-		//moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP_Trans(4));
-		//moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP_Trans(4));
-		//moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP_Trans_V2(4));
+		moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP_Trans(3));
 		//moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP_Trans_Reorder(4));
-		moveMaker[Chess.BLACK] = new AIMoveMaker(new Minimax(3));
 		//moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP(3));
 		
 

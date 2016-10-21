@@ -8,7 +8,7 @@ import java.util.HashMap;
 import chesspresso.move.IllegalMoveException;
 import chesspresso.position.Position;
 
-public class ABP_Trans implements ChessAI {
+public class ABP_Trans implements ChessAI{
 	private int max_depth;
 	private int curPlayer;
 	protected HashMap<Long, TransValue> transTable = new HashMap<>();
@@ -58,16 +58,19 @@ public class ABP_Trans implements ChessAI {
 
 	@Override
 	public short getMove(Position position) throws IllegalMoveException {
-		long start = System.currentTimeMillis();
 		// TODO Auto-generated method stub
-		curPlayer = position.getToPlay();
+		long start = System.currentTimeMillis();
 		
-		short res = (maxMove(position, 0, Integer.MIN_VALUE, Integer.MAX_VALUE)).move;
+		curPlayer = position.getToPlay();
+		short res = miniMaxIDS(position, max_depth);
+		//return (maxMove(position, 0, Integer.MIN_VALUE, Integer.MAX_VALUE)).move;
+		
 		long elapsedTime = System.currentTimeMillis() - start;
 		try {
-            FileOutputStream timecompete = new FileOutputStream("ABP_Trans_Log.txt", true);
-            timecompete.write((Long.toString(elapsedTime) + "\n").getBytes());
-            timecompete.close();
+            FileOutputStream fos = new FileOutputStream("ABP_Trans_Log.txt", true);
+            fos.write((Long.toString(elapsedTime) + "\n").getBytes());
+            fos.write(System.getProperty("line.separator").getBytes());
+            fos.close();
         } catch (FileNotFoundException fnfe) {
             System.out.println("FileNotFoundException : " + fnfe);
         } catch (IOException ioe) {
@@ -76,10 +79,19 @@ public class ABP_Trans implements ChessAI {
         System.out.println("ABP_Trans  time spend " + Long.toString(elapsedTime) + "ms");
 		return res;
 	}
+	
+	private short miniMaxIDS(Position position, int maxDepth) throws IllegalMoveException{
+		MoveVal bestMove = new MoveVal();
+		for(int i = 1; i <= maxDepth; i++){
+			bestMove = maxMove(position, 0, Integer.MIN_VALUE, Integer.MAX_VALUE, i);
+			//System.out.println("bestMove " + Integer.toString(i) + " Depth Finish!");
+		}
+		return bestMove.move;
+	}
 
-	private MoveVal maxMove(Position position, int depth, int alpha, int beta) throws IllegalMoveException {
+	private MoveVal maxMove(Position position, int depth, int alpha, int beta, int curMaxDepth) throws IllegalMoveException {
 		MoveVal bestMove = new MoveVal((short) 0, Integer.MIN_VALUE);
-		if (depth == max_depth || position.isTerminal()) {
+		if (depth == curMaxDepth || position.isTerminal()) {
 			bestMove.setMove(position.getLastShortMove());
 			bestMove.setVal(utility(position));
 			// System.out.println(Integer.toString(bestMove.val));
@@ -87,18 +99,20 @@ public class ABP_Trans implements ChessAI {
 			for (short move : position.getAllMoves()) {
 				position.doMove(move);
 				if (transTable.containsKey(position.getHashCode())
-						&& (transTable.get(position.getHashCode())).depth > depth) {
+						&& (transTable.get(position.getHashCode())).depth >= curMaxDepth) {
 					System.out.println("Max Contain Fonud" + Integer.toString(depth));
 					TransValue tv = transTable.get(position.getHashCode());
 					bestMove.setMove(move);
 					bestMove.setVal(tv.val);
 				} else {
-					int val = (minMove(position, depth + 1, alpha, beta)).val;
+					int val = (minMove(position, depth + 1, alpha, beta, curMaxDepth)).val;
 					if (bestMove.val < val) {
 						bestMove.setVal(val);
 						bestMove.setMove(move);
 					}
-					transTable.put(position.getHashCode(), new TransValue(val, depth, move));
+					
+					
+					transTable.put(position.getHashCode(), new TransValue(val, curMaxDepth, move));
 				}
 
 				position.undoMove();
@@ -114,9 +128,9 @@ public class ABP_Trans implements ChessAI {
 		return bestMove;
 	}
 
-	private MoveVal minMove(Position position, int depth, int alpha, int beta) throws IllegalMoveException {
+	private MoveVal minMove(Position position, int depth, int alpha, int beta, int curMaxDepth) throws IllegalMoveException {
 		MoveVal bestMove = new MoveVal((short) 0, Integer.MAX_VALUE);
-		if (depth == max_depth || position.isTerminal()) {
+		if (depth == curMaxDepth || position.isTerminal()) {
 			bestMove.setMove(position.getLastShortMove());
 			bestMove.setVal(utility(position));
 			// System.out.println(Integer.toString(bestMove.val));
@@ -124,18 +138,18 @@ public class ABP_Trans implements ChessAI {
 			for (short move : position.getAllMoves()) {
 				position.doMove(move);
 				if (transTable.containsKey(position.getHashCode())
-						&& (transTable.get(position.getHashCode())).depth > depth) {
+						&& (transTable.get(position.getHashCode())).depth >= curMaxDepth) {
 					System.out.println("Min Contain Fonud" + Integer.toString(depth));
 					TransValue tv = transTable.get(position.getHashCode());
 					bestMove.setMove(move);
 					bestMove.setVal(tv.val);
 				} else {
-					int val = (maxMove(position, depth + 1, alpha, beta)).val;
+					int val = (maxMove(position, depth + 1, alpha, beta, curMaxDepth)).val;
 					if (bestMove.val > val) {
 						bestMove.setMove(move);
 						bestMove.setVal(val);
 					}
-					transTable.put(position.getHashCode(), new TransValue(val, depth, move));
+					transTable.put(position.getHashCode(), new TransValue(val, curMaxDepth, move));
 				}
 				position.undoMove();
 
