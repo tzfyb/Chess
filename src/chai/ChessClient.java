@@ -76,16 +76,16 @@ public class ChessClient extends Application {
 		// from a server, depending on which type is used.
 		moveMaker = new MoveMaker[2];
 		
-		//moveMaker[Chess.WHITE] = new AIMoveMaker(new Minimax(4));
+		moveMaker[Chess.WHITE] = new AIMoveMaker(new Minimax(3));
 		//moveMaker[Chess.WHITE] = new AIMoveMaker(new ABP_Trans(4));
 		//moveMaker[Chess.WHITE] = new TextFieldMoveMaker();
 		// moveMaker[Chess.WHITE] = new AIMoveMaker(new RandomAI());
-		moveMaker[Chess.WHITE] = new AIMoveMaker(new ABP(4));
-		moveMaker[Chess.BLACK] = new AIMoveMaker(new RandomAI());
+		//moveMaker[Chess.WHITE] = new AIMoveMaker(new ABP(4));
+		//moveMaker[Chess.BLACK] = new AIMoveMaker(new RandomAI());
 		// moveMaker[Chess.BLACK] = new TextFieldMoveMaker();
 		//moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP_Trans(3));
 		//moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP_Trans_Reorder(4));
-		//moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP(3));
+		moveMaker[Chess.BLACK] = new AIMoveMaker(new ABP(3));
 		
 
 		VBox vb = new VBox();
